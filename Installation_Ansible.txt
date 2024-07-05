@@ -1,0 +1,23 @@
+In this section we will configure Ansible in a Ubuntu Controller and then generate key pair and copy the public key in the nodes.After launching the server we may make sure to have SSH (port 22) granted to the EC2 security group. In the console we can rename or tag the EC2 instance in order to differentiate the controller for the nodes or clients. We will use CLI to connect the EC2 instance via SSH. From the ClI we have to type the following commands.
+
+-Change the static name or IP address the name controller to the instance with command:
+            $ sudo hostnamectl set-hostname name-controller
+After you must exit and reconnect (SSH) again in order to have the new name appear in the path-We must be on the root to perform the task:
+             $ sudo -i
+-Check if Python3 is installed with command
+            $ python3 --version
+   If python3 is not installed you will run command:
+            $ sudo apt install python3
+-update and install Ansible following each command
+           $ sudo apt update           $ sudo apt install software-properties-common           $ sudo add-apt-repository --yes --update ppa:ansible/ansible           $ sudo apt install ansible-verify the version         $ ansible --versionIf you already on the root you do not need to add “sudo” in front of the commandYou must follow the command of the link page : https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu-Generate key pair with the command: must be on the root to perform this      $ ssh-keygen -t rsa Keep typing enter after all question asked. The command will generate public key (id_rsa.pub) and private key (id_rsa). Both will be in the folder name “.ssh” Enter the folder to see both keys. Type       $ cd .ssh
+       $ ls -al-The private key will stay in the controller and the public key will be copy and paste in the nodes.      $ cat id_rsa.pubCopy the content and go paste it in the authorized_keys of the nodes. On the Nodes you must SSH and changes the name too. After that you must be on the root using command:Task to be complete on the Nodes     $ sudo hostnamectl set-hostname name-Nodes
+After you must exit and reconnect (SSH) again in order to have the new name appear in the path-We must be on the root to perform the task:
+             $ sudo -I-Enter the folder .SSH       $ cd .ssh
+       $ ls -al
+You will have a file name authorized_keys. You will have to enter the file by :       $ vi authorized_keys The file will have the private key already. So, you will have to type I (insert) then fn+             (right arrow) to go to the end , then enter to go down and paste the copied text there. Lastly type Esc : wq! To save the change. Do the same for all your nodes.Return to the controller-Make sure to be in the .SSH folder then from there type version command      $ ansible --version
+There will be a config file with destination /etc/ansible/ansible.cfg. You must enter in the ansile folder     $ cd /etc/
+     $ cd ansible
+     $ ls -al                          to see the content of the folder. There will be three files (ansilbe.cfg, hosts and roles). You must enter the files hosts to add all hosts meaning all private IP of all the nodes in the Ex2 collection section. If you group make sure to put the name of the group in brackets [ubuntu-nodes] and down the public or private IP address of the nodes.    $ vi hostsAfter copy all IP address IP, Lastly type Esc : wq! To save the change.-To test the connectivity you can try with one nodes or all nodes
+One nodes type   $ ssh root@private Ip placed on the hosts lists.                      Ex: $ ssh root@10.0.1.10You will be prompt to valid the connection so you will press “y” to confirm and the connection will go through. To logout type exit.For all servers type: $ ansible -m ping all
+ $ ansible -m ping group-name.                         If you want to ping a specific group
+ $ ansible -m ping ip                                             if you want to ping just one address

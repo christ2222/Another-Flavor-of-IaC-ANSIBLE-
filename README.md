@@ -28,7 +28,7 @@ The architecture of this setup includes:
 
 ### 1. Setting up the Ansible Controller
 1. **Launch an EC2 Instance**: Launch an Ubuntu EC2 instance to serve as the Ansible controller. Ensure it has Ansible installed.
-2. **Check if python3 install**:
+2. **Check if python3 installed**:
      ```sh
      python3 --version
       ```

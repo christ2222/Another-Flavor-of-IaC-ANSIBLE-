@@ -8,7 +8,7 @@ in this project client = worker
 - [Setup Instructions](#setup-instructions)
   - [1. Setting up the Ansible Controller](#1-setting-up-the-ansible-controller)
   - [2. Configuring Ansible Clients](#2-configuring-ansible-clients)
-- [Usage](#usage)
+- [Test connectivity](#Test connectivity)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -88,8 +88,32 @@ sudo hostnamectl set-hostname <worker>
 Exit and reconnect (SSH) to the instance for the new hostname to appear in the path.
 
 ### 3. Configuring Ansible Inventory
-1. **Edit `hosts` file**: On the Ansible controller, create or edit the `hosts` file to include the client details:
-   ```ini
+
+ **Create the Inventory Directory and File**
+
+Create a directory named `ansible-setup` and an `inventory` directory inside it:
+
+```bash
+mkdir -p ~/ansible-setup/inventory
+```
+
+Create an inventory file named `inventory` in the `inventory` directory:
+
+```bash
+touch ~/ansible-setup/inventory/inventory
+```
+
+**Edit the Inventory File**
+
+Open the `inventory` file with your preferred text editor:
+
+```bash
+nano ~/ansible-setup/inventory/inventory
+```
+
+Add the following content to define the inventory in INI format:
+
+```ini
    [amazon_linux]
    amazon_client1 ansible_host=client1-ip ansible_user=ec2-user
    amazon_client2 ansible_host=client2-ip ansible_user=ec2-user
@@ -99,8 +123,34 @@ Exit and reconnect (SSH) to the instance for the new hostname to appear in the p
    ubuntu_client2 ansible_host=client4-ip ansible_user=ubuntu
    ```
 
-## Usage
+**Verify the Inventory Configuration**
+
+Verify that the inventory file is correctly formatted and recognized by Ansible:
+
+```bash
+ansible-inventory -i ~/ansible-setup/inventory/inventory --list -vvvv
+```
+
+The output should show the parsed inventory with the defined hosts and groups
+
+---
+
+  **Directory Structure**
+
+Your directory structure should look like this:
+
+```
+~/ansible-setup/
+├── inventory/
+│   └── inventory
+```
+
+
+ ### 4. Test Connectivity
 - Test connectivity:
+```bash
+ansible all -i ~/ansible-setup/inventory/inventory -m ping -vvvv
+```
   ```sh
   ansible all -m ping
   ```
@@ -111,7 +161,7 @@ Exit and reconnect (SSH) to the instance for the new hostname to appear in the p
   ssh ubuntu@<ip-address>
   ```
 
-```
+``
 
 ## Contributing
 Contributions are welcome! Please fork this repository and submit a pull request for any enhancements or fixes.
